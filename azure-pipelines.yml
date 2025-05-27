@@ -5,6 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+  # These should be set as pipeline secrets in Azure DevOps
   ARM_CLIENT_ID: $(ARM_CLIENT_ID)
   ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
   ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
@@ -16,6 +17,7 @@ steps:
     versionSpec: '3.x'
 
 - script: |
+    echo "Installing Terraform"
     curl -o terraform.zip https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_amd64.zip
     unzip terraform.zip
     sudo mv terraform /usr/local/bin/
@@ -23,14 +25,31 @@ steps:
   displayName: 'Install Terraform'
 
 - script: |
+    echo "Initializing Terraform"
     terraform init
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
   displayName: 'Terraform Init'
 
 - script: |
+    echo "Running Terraform Plan"
     terraform plan -out=tfplan
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
   displayName: 'Terraform Plan'
 
 - script: |
+    echo "Applying Terraform Plan"
     terraform apply -auto-approve tfplan
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
   displayName: 'Terraform Apply'
-
