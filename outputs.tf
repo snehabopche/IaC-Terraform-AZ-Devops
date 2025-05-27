@@ -1,6 +1,6 @@
 output "vm_name" {
   description = "Name of the virtual machine"
-  value       = azurerm_linux_virtual_machine.vm.name
+  value       = azurerm_windows_virtual_machine.vm.name
 }
 
 output "storage_account_name" {
@@ -15,11 +15,10 @@ output "storage_container_name" {
 
 output "sql_server_name" {
   description = "Name of the SQL Server"
-  value       = azurerm_mssql_server.sql_server.name
+  value       = azurerm_mssql_server.sqlserver.name
 }
 
 output "sql_database_name" {
   description = "Name of the SQL Database"
   value       = azurerm_mssql_database.sqldb.name
 }
-
